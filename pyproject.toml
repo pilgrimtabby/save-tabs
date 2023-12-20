@@ -1,0 +1,35 @@
+[project]
+name = "save-tabs"
+dependencies = [ 
+    "chime",
+    "pywin32; platform_system == 'Windows'",
+    "PyAutoGUI >= 0.9.53; platform_system == 'Windows'",
+    "pyperclip >= 1.0.9; platform_system == 'Windows'",
+]
+version = "0.0.3"
+authors = [
+  { name="pilgrim_tabby", email="pilgrimtabby@gmail.com" },
+]
+description = "Creates double-click shortcuts for currently open Google Chrome windows/ tabs"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+]
+
+[project.urls]
+Homepage = "https://github.com/pilgrimtabby/save-tabs"
+Issues = "https://github.com/pilgrimtabby/save-tabs/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+savetabs = "save_tabs.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/save_tabs"]
