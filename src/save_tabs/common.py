@@ -10,7 +10,7 @@ import tkinter.filedialog
 
 if platform.system() == "Windows":
     import msvcrt
-    import win32gui
+    import win32ui
 else:
     import termios
     import tty
@@ -19,11 +19,10 @@ import chime
 import advanced_cursor
 
 
-def focus_window():
+def focus_window(window=None):
     """Bring this program's window into focus."""
     if platform.system() == "Windows":
-        hwnd = win32gui.FindWindowEx(0,0,0, "C:\\Windows\\py.exe")
-        win32gui.SetForegroundWindow(hwnd)
+        window.SetForegroundWindow()
     else:
         # Applescript that finds the correct terminal window and activates it.
         # This code can be adjusted to work with other programs by changing the word
@@ -50,9 +49,13 @@ def clear():
 
 def get_dir_path():
     """Brings up a window that allows user to select a directory."""
+    if platform.system() == "Windows":
+        program_window = win32ui.GetForegroundWindow()
+    else:
+        program_window = None
     tkinter.Tk().withdraw()  # Prevents empty tkinter window from appearing
     dir_path = tkinter.filedialog.askdirectory()
-    focus_window()
+    focus_window(program_window)
     return dir_path
 
 
@@ -63,7 +66,7 @@ def exit_screen_success():
     chime.info()
     clear()
     print("\n\n\n"
-          "                File successfully made! \n\n\n"
+          "                File successfully saved! \n\n\n"
           "               ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇\n"
           "               ⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⠿⠿⢿⡿⢿⣿⣿⣿⠃\n"
           "               ⣿⣿⣿⣿⣿⣿⣥⣄⣀⣀⠀⠀⠀⠀⠀⢰⣾⣿⣿⠏\n"

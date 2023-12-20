@@ -30,6 +30,9 @@ def get_window_list_windows():
     """Make sure user is all right with keyboard scripting, then call the function that gathers
     tab urls from an open Chrome window."""
     # Warning message/ confirmation screen
+    common.clear()
+    header = common.box("Save tabs | Disclaimer")
+    print(f"{header}\n")
     consent = input("Please make sure the Chrome window you want to save is open and snapped to "
                     "the left side of the screen!\n\n"
 
@@ -38,11 +41,10 @@ def get_window_list_windows():
                     "ctrl+l (to select the url of each tab)\n"
                     "ctrl+c (to copy the url of each tab)\n"
                     "ctrl+r (to refresh tabs if necessary)\n"
-                    "If you have rebinded any of these shortcuts, or just don't want to use a "
+                    "If you have rebinded any of these shortcuts, or don't want to use a "
                     "program using keyboard scripting, please exit now!\n\n"
 
-                    "Otherwise, click this window, type \"yes\", and press enter to proceed when "
-                    "you're ready: ").lower()
+                    "Otherwise, enter \"yes\" when you're ready: ").lower()
     if not consent == "yes":
         common.exit_screen_interrupt()
         return None
@@ -50,22 +52,16 @@ def get_window_list_windows():
     # Get tabs from each Chrome window
     keep_going = True
     window_list = []
+    program_window = win32ui.GetForegroundWindow()
     while keep_going:
-        pyautogui.click(200, 0)  # Click on top left of screen to focus the window on Chrome
-        # Make sure Chrome is actually in foreground
-        foreground_window = win32ui.GetForegroundWindow().GetWindowText()
-        if not foreground_window == "Google Chrome":
-            input("Looks like Google Chrome isn't in the right spot. Make sure it's snapped "
-                    "to the left side of the screen, then click here and press enter.")
-            continue
-
         tab_list = scrape_window_urls()
         window_list += [tab_list]
 
         # Ask if user wants to save another window
-        one_more = input("Save another window's tabs?\n\nIf yes, Please make sure the window "
-                            "you want to save is open and snapped to the left side of the "
-                            "screen. Then click here, type \"yes\", and press enter.").lower()
+        common.focus_window(program_window)
+        one_more = input("Save another window's tabs?\n\n"
+                         "If yes, snap that window to the left side of the screen, then enter "
+                         "\"yes\". Otherwise, press enter: ").lower()
         if not one_more == "yes":
             keep_going = False
 
@@ -73,18 +69,39 @@ def get_window_list_windows():
 
 
 def scrape_window_urls():
-    """Uses keboard scripting to fetch Chrome urls individually from an open window. Requires
-    the window to be present at (200, 0) on the screen -- best way to do this is to snap the
-    window to the left side of the screen. """
+    """Uses keboard scripting to fetch Chrome urls individually from an open window. Requires the
+    window to be present at (200, 0) on the screen -- easiest way to ensure this is to snap the
+    window to the left side of the screen."""
     tab_list = []
+    header = common.box("Save tabs | Gathering data")
+
     # Confirm window type before gathering tab information
-    is_window_incognito = input("Would you like to save this as an incognito window (as "
-                                "opposed to a regular window)? If so, enter \"yes\"; "
-                                "otherwise, press enter.").lower()
+    common.clear()
+    print(f"{header}\n")
+    is_window_incognito = input("To save this window as incognito (as opposed to regular), enter "
+                                "\"yes\"; otherwise, press enter: ").lower()
     if is_window_incognito == "yes":
-        tab_list += "incognito"
+        tab_list += ["incognito"]
     else:
-        tab_list += "regular"
+        tab_list += ["regular"]
+
+    # Make sure Chrome is actually in foreground
+    print("This program will simulate a mouse click to check Google Chrome's location. Hang on...")
+    time.sleep(1)
+    current_mouse = pyautogui.position()
+    pyautogui.click(200, 0)  # Click on top left of screen to focus the window on Chrome
+    pyautogui.moveTo(current_mouse)  # Move mouse back to where it was
+    foreground_window_text = win32ui.GetForegroundWindow().GetWindowText()
+    while not "Google Chrome" in foreground_window_text:
+        input("\nLooks like Google Chrome isn't in the right spot. Make sure it's snapped "
+                "to the left side of the screen, then click here and press enter.")
+        current_mouse = pyautogui.position()
+        pyautogui.click(200, 0)
+        pyautogui.moveTo(current_mouse)
+        foreground_window_text = win32ui.GetForegroundWindow().GetWindowText()
+
+    common.clear()
+    print(f"{header}\n\nWorking... (don't click anywhere!)")
 
     pyperclip.copy("")  # Make sure clipboard is empty
     repeated_tabs = 0
@@ -101,13 +118,16 @@ def scrape_window_urls():
             pyautogui.hotkey('ctrl', 'l')
             pyautogui.hotkey('ctrl', 'c')
             url = pyperclip.paste()
+        pyautogui.hotkey('ctrl', 'tab')
         # If the tab has already been added to the list, increment repeated_tabs. If it
         # gets to 3, treat the program like it's already copied all the tab urls in the
         # window.
-        if url not in tab_list:
-            tab_list += url
+        if not url in tab_list:
+            tab_list += [url]
         else:
             repeated_tabs += 1
+
+    print("\nTabs successfully gathered!")
 
     return tab_list
 
