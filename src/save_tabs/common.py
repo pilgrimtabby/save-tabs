@@ -8,7 +8,6 @@ import time
 import tkinter
 import tkinter.filedialog
 
-
 if platform.system() == "Windows":
     import msvcrt
     import win32ui
