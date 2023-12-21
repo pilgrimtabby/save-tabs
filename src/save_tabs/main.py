@@ -4,7 +4,7 @@ tabs on command.
 """
 import common
 import write_file
-import user_input
+import file_menu
 import window_list_module
 
 
@@ -12,6 +12,6 @@ def main():
     """Prompt a user for information and generate the executable."""
     window_list = window_list_module.get_window_list()
     if window_list is not None:
-        file_path = user_input.get_user_input()
+        file_path = file_menu.main()
         write_file.write_file(window_list, file_path)
         common.exit_screen_success()

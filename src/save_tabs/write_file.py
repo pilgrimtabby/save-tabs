@@ -15,24 +15,20 @@ def write_file(window_list, file_path):
 
 
 def write_file_windows(window_list, file_path):
-    """Generates the file at file_path containing the tabs selected in window_list, on Windows."""
+    """Generates a .bat file at file_path containing commands to open the tabs selected in 
+    window_list, on Windows."""
     with open(file_path, "w", encoding="UTF-8") as file:
-        file.write("import webbrowser\n"
-
-                   "webbrowser.register(\"chrome-regular\", None, webbrowser.BackgroundBrowser"
-                   "(\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\"))\n"
-
-                   "webbrowser.register(\"chrome-incognito\", None, webbrowser.BackgroundBrowser"
-                   "(\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\", "
-                   "\"-incognito\"))\n")
+        file.write("@echo off\n")
 
         for window in window_list:
-            if window.type == "regular":
-                browser_type = "chrome-regular"
-            else:
-                browser_type = "chrome-incognito"
+            file.write("start chrome --new-window")
+            if window.type == "incognito":
+                file.write(" --incognito")
             for url in window.urls:
-                file.write(f"webbrowser.get(\"{browser_type}\").open(\"{url}\"\n")
+                file.write(f" \"{url}\"")
+            file.write("\n")
+
+        file.write("exit")
         file.close()
 
 
