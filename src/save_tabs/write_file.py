@@ -27,11 +27,11 @@ def write_file_windows(window_list, file_path):
                    "\"-incognito\"))\n")
 
         for window in window_list:
-            if window[0] == "regular":
+            if window.type == "regular":
                 browser_type = "chrome-regular"
             else:
                 browser_type = "chrome-incognito"
-            for url in window[1:]:
+            for url in window.urls:
                 file.write(f"webbrowser.get(\"{browser_type}\").open(\"{url}\"\n")
         file.close()
 
@@ -43,11 +43,11 @@ def write_file_mac(window_list, file_path):
         file.write("#!/usr/bin/env zsh\n\n")
 
         for window in window_list:
-            if window[0] == "regular":
+            if window.type == "regular":
                 file.write("open -na \"Google Chrome\" --args --new-window")
             else:
                 file.write("open -na \"Google Chrome\" --args --incognito --new-window")
-            for url in window[1:]:
+            for url in window.urls:
                 file.write(f" \"{url}\"")
 
             # Add fullscreen command if that setting is on.

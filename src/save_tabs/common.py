@@ -8,6 +8,7 @@ import time
 import tkinter
 import tkinter.filedialog
 
+
 if platform.system() == "Windows":
     import msvcrt
     import win32ui
@@ -22,7 +23,8 @@ import advanced_cursor
 def focus_window(window=None):
     """Bring this program's window into focus."""
     if platform.system() == "Windows":
-        window.SetForegroundWindow()
+        if window is not None:
+            window.SetForegroundWindow()
     else:
         # Applescript that finds the correct terminal window and activates it.
         # This code can be adjusted to work with other programs by changing the word
@@ -76,12 +78,6 @@ def exit_screen_success():
           "               ⣿⠉⠛⢶⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀⡇\n"
           "               ⠟⠃⠀⠀⠀⠈⠲⣴⣦⣤⣤⣤⣶⡾⠁\n\n")
     time.sleep(.5)
-    clear()
-    advanced_cursor.show()
-
-
-def exit_screen_interrupt():
-    """Splash screen that plays upon exit if file not completed."""
     clear()
     advanced_cursor.show()
 
