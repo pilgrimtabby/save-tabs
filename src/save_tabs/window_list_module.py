@@ -108,9 +108,7 @@ def verify_chrome_location():
 
     foreground_window_text = ""
     while "Google Chrome" not in foreground_window_text:
-        current_mouse = pyautogui.position()
-        pyautogui.click(1, 0)  # Click on top left of screen to focus Chrome
-        pyautogui.moveTo(current_mouse)  # Restore mouse position
+        test_click(pyautogui.position())
         foreground_window = win32ui.GetForegroundWindow()
         foreground_window_text = foreground_window.GetWindowText()
         if "Google Chrome" not in foreground_window_text:
@@ -118,6 +116,16 @@ def verify_chrome_location():
                   "to the left side of the screen, then click here and press enter: ")
 
     return foreground_window
+
+
+def test_click(original_mouse_position):
+    """Click near top left corner of screen to focus the Chrome window (which should be
+    snapped to the left."""
+    pyautogui.click(1, 0)  # Click on top left of screen to focus Chrome
+    try:
+        pyautogui.moveTo(original_mouse_position)  # Restore mouse position
+    except pyautogui.FailSafeException:  # Avoid triggering failsafe if mouse is in a corner
+        pass
 
 
 def get_window_type(window=None):
@@ -215,9 +223,7 @@ def ensure_chrome_in_foreground(target_window):
             first_try = False
         else:
             input("\nChrome still not detected. Try again, then click here and press enter: ")
-        current_mouse = pyautogui.position()
-        pyautogui.click(1, 0)  # Click on top left of screen to focus Chrome
-        pyautogui.moveTo(current_mouse)  # Restore mouse position
+        test_click(pyautogui.position())
         foreground_window = win32ui.GetForegroundWindow()
 
     if not first_try:
