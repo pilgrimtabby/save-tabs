@@ -53,7 +53,6 @@ def change_directory_settings():
 
 def get_file_name():
     """Prompt user for file_name."""
-    file_name_chosen = False
     header = common.box("Save tabs | Filename")
     common.clear()
     file_name = input(f"{header}\n\nPlease enter a filename (press enter for settings): ")
