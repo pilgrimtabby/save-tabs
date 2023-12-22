@@ -29,7 +29,7 @@ def get_window_list():
         window_list = []
         keep_going = True
         while keep_going:
-            chrome_window = verify_chrome_location()
+            chrome_window = ensure_chrome_in_front()
 
             common.focus_window(program_window)
             window_type = get_window_type()
@@ -87,8 +87,8 @@ def get_user_consent_windows():
                     "ctrl+r (to refresh tabs)\n"
                     "ctrl+tab (to switch between tabs)\n\n"
 
-                    "If you have rebinded any of these shortcuts or don't accept these terms, you've "
-                    "been warned!\n\n"
+                    "If you have rebinded any of these shortcuts or don't accept these terms, "
+                    "you've been warned!\n\n"
 
                     "To proceed, enter \"yes\": ").lower()
     if not consent == "yes":
@@ -97,7 +97,7 @@ def get_user_consent_windows():
     return 0
 
 
-def verify_chrome_location():
+def ensure_chrome_in_front():
     """Make sure Chrome is actually in the foreground and in the correct position (left side of
     screen). Then return the Chrome window object."""
     header = common.box("Save tabs | Verifying setup")
@@ -165,23 +165,23 @@ def get_tab_urls(window=None):
 
         tab_urls = []
         repeats = 0
-        ensure_chrome_in_foreground(chrome_window)
+        verify_chrome_location(chrome_window)
         pyautogui.hotkey("ctrl", "1")  # Go to first tab
         while repeats < 2:  # One tab might be a genuine duplicate, but 2 in a row = all tabs done
-            ensure_chrome_in_foreground(chrome_window)
+            verify_chrome_location(chrome_window)
             pyperclip.copy("")  # Make sure clipboard is empty, since weird things can happen
             pyautogui.hotkey("ctrl", "r")  # Refresh page (resets text in url bar)
             url = ""
             tries = 0
             while url == "" and tries < 20:  # In case the page takes a little while to refresh
                 time.sleep(0.5)
-                ensure_chrome_in_foreground(chrome_window)
+                verify_chrome_location(chrome_window)
                 pyautogui.hotkey("ctrl", "l")  # Select url
                 pyautogui.hotkey("ctrl", "c")  # Copy to clipboard
                 url = pyperclip.paste()
                 tries += 1
             pyautogui.hotkey("ctrl", "tab")  # Move to next tab
-            if not url in tab_urls:
+            if url not in tab_urls:
                 tab_urls += [url]  # Only save unique urls
             else:
                 repeats += 1
@@ -210,7 +210,9 @@ def get_tab_urls(window=None):
     return tab_urls
 
 
-def ensure_chrome_in_foreground(target_window):
+def verify_chrome_location(target_window):
+    """Make sure Chrome is still in focus. If it's not, pause the program and prompt the user
+    to move things back into place."""
     foreground_window = win32ui.GetForegroundWindow()
     header = common.box("Save tabs | Getting tab urls")
     first_try = True

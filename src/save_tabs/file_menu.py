@@ -2,7 +2,6 @@
 import os
 import platform
 import time
-import advanced_cursor
 import common
 
 

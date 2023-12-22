@@ -6,7 +6,7 @@ dependencies = [
     "PyAutoGUI >= 0.9.53; platform_system == 'Windows'",
     "pyperclip >= 1.0.9; platform_system == 'Windows'",
 ]
-version = "0.0.5"
+version = "0.0.6"
 authors = [
   { name="pilgrim_tabby", email="pilgrimtabby@gmail.com" },
 ]
