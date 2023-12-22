@@ -7,19 +7,18 @@ import common
 
 def main():
     """Verify destination directory and get filename."""
-    check_target_directory_exists()
-    file_name = get_file_info()
-    target_directory = common.load_pickle("directory.txt")
-    file_path = get_file_path(target_directory, file_name)
-    return file_path
-
-
-def check_target_directory_exists():
-    """Check if directory where file will go exists. If not, prompt user to choose one.
-    If they cancel out of the menu, the desktop is automatically chosen."""
     target_directory = common.load_pickle("directory.txt")
     if not os.path.exists(target_directory):
         change_directory_settings()
+
+    file_name = get_file_name()
+    while file_name == "":
+        settings_menu()
+        file_name = get_file_name()
+
+    target_directory = common.load_pickle("directory.txt")  # For if it was changed in settings 
+    file_path = get_file_path(target_directory, file_name)
+    return file_path
 
 
 def change_directory_settings():
@@ -52,19 +51,12 @@ def change_directory_settings():
         time.sleep(1)
 
 
-def get_file_info():
+def get_file_name():
     """Prompt user for file_name."""
     file_name_chosen = False
     header = common.box("Save tabs | Filename")
-    while not file_name_chosen:
-        common.clear()
-        file_name = input(f"{header}\n\nPlease enter a filename (press enter for settings): ")
-
-        if file_name == "":
-            settings_menu()
-        elif len(file_name) > 0:
-            file_name_chosen = True
-
+    common.clear()
+    file_name = input(f"{header}\n\nPlease enter a filename (press enter for settings): ")
     return file_name
 
 
@@ -74,6 +66,7 @@ def settings_menu():
         menu_options = ["Target directory", "File overwriting", "Go back"]
     else:
         menu_options = ["Target directory", "Automatic fullscreen", "File overwriting", "Go back"]
+
     quit_menu = False
     while not quit_menu:
         common.clear()
@@ -87,12 +80,14 @@ def settings_menu():
         print(f"\nChoose an option (1 - {len(menu_options)}): ")
 
         user_input = ""
+        # Keep going until user presses a valid number or enter / return
         while not user_input.isdigit() and user_input != "\r":
             user_input = common.get_one_char()
 
-        if user_input == "\r":
+        if user_input == "\r":  # Pressed enter / return
             quit_menu = True
-        elif 0 < int(user_input) <= len(menu_options):
+
+        elif 0 < int(user_input) <= len(menu_options):  # Pressed valid number
             choice = menu_options[int(user_input) - 1]
             if choice == "Target directory":
                 change_directory_settings()
