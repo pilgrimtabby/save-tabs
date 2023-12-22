@@ -176,6 +176,7 @@ def get_file_path(target_directory, file_name):
     unique name (unless file overwriting is on (see settings menu) -- then it just returns the
     path without checking for duplicates)."""
     file_overwriting = common.load_pickle("overwrite.txt")
+
     if file_overwriting == "off":
         suffix = 2
         if platform.system() == "Windows":
@@ -188,5 +189,12 @@ def get_file_path(target_directory, file_name):
             while os.path.exists(f"{target_directory}/{new_file_name}"):
                 new_file_name = f"{file_name}-{suffix}"
                 suffix += 1
-    file_path = f"{target_directory}/{new_file_name}"
+        file_path =  f"{target_directory}/{new_file_name}"
+
+    else:
+        if platform.system() == "Windows":
+            file_path = f"{target_directory}/{file_name}.bat"
+        else:
+            file_path =  f"{target_directory}/{file_name}"
+
     return file_path

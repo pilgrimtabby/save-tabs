@@ -67,7 +67,7 @@ def exit_screen_success():
     chime.info()
     clear()
     print("\n\n\n"
-          "                File successfully saved! \n\n\n"
+          "              File successfully saved! \n\n\n"
           "               ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇\n"
           "               ⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⠿⠿⢿⡿⢿⣿⣿⣿⠃\n"
           "               ⣿⣿⣿⣿⣿⣿⣥⣄⣀⣀⠀⠀⠀⠀⠀⢰⣾⣿⣿⠏\n"

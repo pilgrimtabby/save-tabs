@@ -52,18 +52,19 @@ def write_file_mac(window_list, file_path):
                 if automatic_fullscreen == "on":
                     fullscreen_script = '''
                     -- Wait until Chrome is running, in front, and has a window open
-                    set repeatValue to false
-                    repeat until repeatValue
-                        if application id "com.google.Chrome" is running then
-                            if frontmost of application id "com.google.Chrome" then
-                                if window 1 of application id "com.google.Chrome" exists then
-                                    set repeatValue to true
+                    repeat 2000 times  -- try for roughly 5 seconds
+                        try
+                            if application id "com.google.Chrome" is running then
+                                if frontmost of application id "com.google.Chrome" then
+                                    if window 1 of application id "com.google.Chrome" exists then
+                                        exit repeat
+                                    end if
                                 end if
                             end if
-                        end if
+                        on error  -- ignore errors (if this block doesn't work, it doesn't matter too much)
+                        end try
                     end repeat
-                    -- Set fullscreen
-                    tell application "System Events"
+                    tell application "System Events"  -- Set fullscreen
                         tell front window of process "Google Chrome" to set value of attribute "AXFullScreen" to true
                         delay 1
                     end tell
