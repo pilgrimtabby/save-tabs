@@ -73,7 +73,7 @@ def write_file_mac(window_list, file_path):
                                f"osascript << EOF{fullscreen_script}\nEOF")
                 first_window = False
 
-            file.write("\n")
+            file.write("\nsleep 0.1\n")
         file.close()
 
 
