@@ -247,7 +247,7 @@ def get_window_count():
     """Uses Applescript to get number of currently open Chrome windows (macOS only)."""
     get_window_count_script = '''
     if application id "com.google.Chrome" is running then tell application id "com.google.Chrome"
-        set window_count to the index of windows whose visible is true
+        set window_count to the index of windows
         return (number of items in window_count)
     end tell
     '''
