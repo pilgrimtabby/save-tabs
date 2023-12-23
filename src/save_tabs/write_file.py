@@ -24,6 +24,9 @@ def write_file_windows(window_list, file_path):
             file.write("start chrome --new-window")
             if window.type == "incognito":
                 file.write(" --incognito")
+            user_data_dir = common.load_pickle("user-data-dir.txt")
+            if user_data_dir != "" and user_data_dir != "default":
+                file.write(f" --user-data-dir={user_data_dir}")
             for url in window.urls:
                 file.write(f" \"{url}\"")
             file.write("\n")
@@ -43,6 +46,9 @@ def write_file_mac(window_list, file_path):
                 file.write("open -na \"Google Chrome\" --args --new-window")
             else:
                 file.write("open -na \"Google Chrome\" --args --incognito --new-window")
+            user_data_dir = common.load_pickle("user-data-dir.txt")
+            if user_data_dir != "" and user_data_dir != "default":
+                file.write(f" --user-data-dir={user_data_dir}")
             for url in window.urls:
                 file.write(f" \"{url}\"")
 

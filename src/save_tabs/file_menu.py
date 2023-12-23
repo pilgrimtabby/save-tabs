@@ -62,9 +62,10 @@ def get_file_name():
 def settings_menu():
     """Menu to change program settings."""
     if platform.system() == "Windows":
-        menu_options = ["Target directory", "File overwriting", "Go back"]
+        menu_options = ["Target directory", "File overwriting", "User data directory", "Go back"]
     else:
-        menu_options = ["Target directory", "Automatic fullscreen", "File overwriting", "Go back"]
+        menu_options = ["Target directory", "Automatic fullscreen", "File overwriting",
+                        "User data directory", "Go back"]
 
     quit_menu = False
     while not quit_menu:
@@ -94,6 +95,8 @@ def settings_menu():
                 change_fullscreen_settings()
             elif choice == "File overwriting":
                 change_file_overwriting_settings()
+            elif choice == "User data directory":
+                change_user_data_dir_settings()
             elif choice == "Go back":
                 quit_menu = True
 
@@ -162,6 +165,40 @@ def change_file_overwriting_settings():
 
         else:
             done = True
+
+
+def change_user_data_dir_settings():
+    """Docstring"""
+    header = common.box("Save tabs | Settings | User data directory")
+    done = False
+    current_setting = common.load_pickle("user-data-dir.txt")
+    if current_setting == "":
+        current_setting = "default"
+        common.dump_pickle(current_setting, "user-data-dir.txt")
+
+    common.clear()
+    print(f"{header}\n\nUser data directory is set to: {current_setting.upper()}\n\n"
+
+            "NOTE: Don't change this unless you know what you're doing!\n\n"
+            "The user data directory path points to your Chrome user profile directory.\n"
+            "Changing it here will allow you to create shortcuts that open Chrome in a "
+            "profile besides the default.\n"
+            "If you've been working in a separate instance of Chrome and want to save your "
+            "tabs so they reopen in that instance, select that instance's path.\n"
+            "To find the right path, type \"chrome://version/\" into the url bar in Chrome "
+            "and go to \"Profile Path\".\n\n"
+            "To change this setting, press space. To exit, press enter.")
+
+    user_input = common.get_one_char()
+
+    if user_input == " ":
+        print("\nSelect the new directory:")
+        new_user_data_dir = common.get_dir_path()
+        if new_user_data_dir != "" and os.path.exists(new_user_data_dir):
+            common.dump_pickle(new_user_data_dir, "user-data-dir.txt")
+            common.clear()
+            print(f"{header}\n\nSet new user data directory to {new_user_data_dir}")
+            time.sleep(1)
 
 
 def get_file_path(target_directory, file_name):
