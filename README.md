@@ -1,23 +1,35 @@
-# save-tabs
+# About
 
-## Overview
+Saves the current Google Chrome browsing session (windows and tabs) into an executable to use later.
 
+# Usage
 
-## Usage
+After [installation](#installation), run `$ savetabs` to open the GUI interface.
 
-
-## Installation
-
-The easiest way to install this program is using pip.
+A command line interface will be added in the future.
 
 ### Windows
 
-In the console, type `py -m pip install save-tabs`
+After accepting the terms of use, you'll be prompted to snap your Chrome window to the left side of the screen. Follow the on-screen instructions. This program generates a .bat batch file with your saved Chrome session information--to use it, double-click it.
 
 ### macOS
 
-In the console, type `python3 -m pip install save-tabs`
+If you have more than one window open, you'll be prompted to choose which window(s) to save. Follow the on-screen instructions. This program generates a bash executable file with your Chrome session information--to use it, double click it.
+
+# Installation
+
+Python is required. This program was tested on Python 3.11 but should work on all maintained Python versions.
+
+### Windows and macOS
+
+#### Option 1: pip
+
+The easiest way to install this program is using pip: `$ pip install save-tabs`
+
+#### Option 2: download and run
+
+Download the source code and run main.py: `$ python3 /path/to/main.py`
 
 ### Linux
 
-This program is untested on Linux but I believe it should work.
+This program has not been tested on Linux.
