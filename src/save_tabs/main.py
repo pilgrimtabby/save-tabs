@@ -15,3 +15,7 @@ def main():
         file_path = file_menu.main()
         write_file.write_file(window_list, file_path)
         common.exit_screen_success()
+
+
+if __name__ == "__main__":
+    main()
