@@ -56,6 +56,7 @@ def get_window_list():
         save_only_window = confirm(window_list, [1])
         if save_only_window:
             return window_list
+        common.clear()
         return None
 
     return choose_windows(window_list)
