@@ -1,25 +1,43 @@
-"""Allows user to perform different actions with the cursor (hide and
-show, and move to print/ return input).
+"""Allow some different cursor actions in the console.
+
+Functions:
+    dynamic_input(txt, x=0, y=0) -> str
+    dynamic_print(txt, x=0, y=0)
+    hide()
+    show()
 """
 
 
 def dynamic_input(txt, x=0, y=0):
-    """Moves cursor to designated line (default is top left) and returns
-    the user input, with txt as prompt.
+    """Move cursor to `(x, y)` (`(0, 0)` is top left) and return an
+    input call.
+
+    Not tested on Windows.
+
+    Args:
+        txt (str): The input statement's prompt.
+        x (int): x-coordinate of the cursor.
+        y (int): y-coordinate of the cursor.
     """
     if isinstance(x, int) and isinstance(y, int):
-        response = input(f"\033[{y};{x}H" + txt)
-        return response
-    print("Error: please enter integers for x and y values.")
-    return None
+        return input(f"\033[{y};{x}H" + txt)
+    raise ValueError("x and y must both be integers")
 
 
 def dynamic_print(txt, x=0, y=0):
-    """Prints txt at the given x, y coordinate."""
+    """Print `txt` at `(x, y)` (`(0, 0)` is top left).
+
+    Not tested on Windows.
+
+    Args:
+        txt (str): The printed text.
+        x (int): x-coordinate of the cursor.
+        y (int): y-coordinate of the cursor.
+    """
     if isinstance(x, int) and isinstance(y, int):
         print(f"\033[{y};{x}H" + txt)
     else:
-        print("Error: please enter integers for x and y values.")
+        raise ValueError("x and y must both be integers")
 
 
 def hide():

@@ -1,7 +1,5 @@
 
-dist/.DS_Store
-.DS_Store
+*.DS_Store
 *.pyc
 *.txt
-pizza/bin/activate
 *.csh
