@@ -88,9 +88,9 @@ def get_unique_name(path, name):
     else:
         extension = ""
     suffix = 2
-    while os.path.exists(f"{path}/{name}{extension}"):
+    while os.path.exists(f"{path}/{name}-{suffix}{extension}"):
         suffix += 1
-    return f"{name}{extension}"
+    return f"{name}-{suffix}{extension}"
 
 
 def write_file_windows(window_list, chrome_path, files_directory, filename):
@@ -119,16 +119,16 @@ def write_file_windows(window_list, chrome_path, files_directory, filename):
             file goes.
         filename (str): Name of the file.
     """
-    path = f"{files_directory}{filename}"
+    path = f"{files_directory}/{filename}"
     with open(path, "w", encoding="UTF-8") as file:
         file.write("@ECHO OFF\n")
 
         for window in window_list:
             file.write(f"start \"{chrome_path}\" --new-window")
-            if window.type == "incognito":
+            if window.mode == "incognito":
                 file.write(" --incognito")
-            user_data_dir = common.load_pickle("user-data-dir.txt")
-            file.write(f" --user-data-dir={user_data_dir}")
+            user_data_dir = common.load_pickle("user_data_dir.txt")
+            file.write(f" --user-data-dir=\"{user_data_dir}\"")
             for url in window.urls:
                 file.write(f" \"{url}\"")
             file.write("\n")
@@ -160,7 +160,7 @@ def write_file_macos(window_list, chrome_path, files_directory, filename):
     Finally, after each window, including the first one, write
     `sleep 0.1` to prevent windows from opening out of order.
 
-    After the script is written, make it executable so it can be ran
+    After the script is written, make it executable so it can be run
     with a double-click.
 
     Args:
@@ -170,18 +170,17 @@ def write_file_macos(window_list, chrome_path, files_directory, filename):
             file goes.
         filename (str): Name of the file.
     """
-    path = f"{files_directory}{filename}"
+    path = f"{files_directory}/{filename}"
     with open(path, "w", encoding="UTF-8") as file:
         file.write("#!/usr/bin/env zsh\n\n")
 
         first_window = True
         for window in window_list:
-            if window.type == "regular":
-                file.write(f"open -na \"{chrome_path}\" --args --new-window")
-            else:
-                file.write(f"open -na \"{chrome_path}\" --args --incognito --new-window")
-            user_data_dir = common.load_pickle("user-data-dir.txt")
-            file.write(f" --user-data-dir={user_data_dir}")
+            file.write(f"open -na \"{chrome_path}\" --args --new-window")
+            if window.mode == "incognito":
+                file.write(" --incognito")
+            user_data_dir = common.load_pickle("user_data_dir.txt")
+            file.write(f" --user-data-dir=\"{user_data_dir}\"")
             for url in window.urls:
                 file.write(f" \"{url}\"")
 
@@ -189,9 +188,15 @@ def write_file_macos(window_list, chrome_path, files_directory, filename):
                 first_window = False
                 automatic_fullscreen = common.load_pickle("fullscreen.txt")
                 if automatic_fullscreen == "on":
+                    file.write("\nosascript <<EOF\n")
+
                     program_path = os.path.dirname(os.path.realpath(__file__))
-                    script = f"{program_path}/scripts/applescript/set_fullscreen.applescript"
-                    file.write(f"\nosascript << EOF{script}\nEOF")
+                    script_path = f"{program_path}/scripts/applescript/set_fullscreen.applescript"
+                    with open(script_path, "r", encoding="UTF-8") as script:
+                        script_contents = script.readlines()
+                    file.writelines(script_contents)
+
+                    file.write("EOF")
             file.write("\nsleep 0.1\n")
 
     # Make file executable. Equivalent to shell command `chmod +x`

@@ -27,10 +27,14 @@ Functions:
     ask_if_continue(program_pycwnd: PyCWnd) -> bool
 """
 import collections
+import platform
 import time
-import pyautogui
-import pyperclip
-import win32ui
+
+if platform.system() == "Windows":
+    import pyautogui
+    import pyperclip
+    import win32ui
+
 import common
 
 
