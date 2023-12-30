@@ -1,17 +1,56 @@
-"""Scrape url data from open Chrome windows, confirm this data with the user, ask for input
-(desired filename and directory), and create a clickable executable that will open the Chrome
-tabs on command.
+"""Display program GUI.
+
+Functions:
+    main()
+    exit_screen()
 """
+import platform
+import time
+
+if platform.system() == "Windows":
+    import window_windows
+else:
+    import chime
+    import window_macos
+
+import advanced_cursor
 import common
-import write_file
-import file_menu
-import window_list_module
+import make_file
 
 
 def main():
-    """Prompt a user for information and generate the executable."""
-    window_list = window_list_module.get_window_list()
+    """Display GUI for creating a file."""
+    if platform.system() == "Windows":
+        window_list = window_windows.get_window_list()
+    else:
+        window_list = window_macos.get_window_list()
+
     if window_list is not None:
-        file_path = file_menu.main()
-        write_file.write_file(window_list, file_path)
-        common.exit_screen_success()
+        file_successfully_made = make_file.main(window_list)
+        if file_successfully_made:
+            exit_screen()
+
+
+def exit_screen():
+    """Display splash screen on exit."""
+    advanced_cursor.hide()
+    if platform.system() != "Windows":
+        chime.theme("mario")
+        chime.info()
+    common.clear()
+    print("\n\n\n               Come again soon!\n\n\n"
+        "               ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇\n"
+        "               ⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⠿⠿⢿⡿⢿⣿⣿⣿⠃\n"
+        "               ⣿⣿⣿⣿⣿⣿⣥⣄⣀⣀⠀⠀⠀⠀⠀⢰⣾⣿⣿⠏\n"
+        "               ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣜⡻⠋\n"
+        "               ⣿⣿⡿⣿⣿⣿⣿⠿⠿⠟⠛⠛⠛⠋⠉⠉⢉⡽⠃\n"
+        "               ⠉⠛⠛⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⡤⠚⠉\n"
+        "               ⣿⠉⠛⢶⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀⡇\n"
+        "               ⠟⠃⠀⠀⠀⠈⠲⣴⣦⣤⣤⣤⣶⡾⠁\n\n")
+    time.sleep(.5)
+    common.clear()
+    advanced_cursor.show()
+
+
+if __name__ == "__main__":
+    main()
