@@ -168,8 +168,8 @@ def change_user_data_dir_settings():
                            "NOTE: Don't change this unless you know what you're doing!\n\n"
 
                            "This value points to a Chrome user profile directory.\n"
-                           "Changing it here will allow you to create shortcuts that open Chrome "
-                           "in a profile besides the default.\n"
+                           "Changing it here will allow you to create shortcuts that open tabs "
+                           "in a Chrome profile besides the default.\n"
                            "If you've been working in a separate instance of Chrome and want to "
                            "save your tabs so they reopen in that instance, select that "
                            "instance's path.\n"

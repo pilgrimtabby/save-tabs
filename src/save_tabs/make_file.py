@@ -90,7 +90,7 @@ def get_unique_name(path, name):
     suffix = 2
     while os.path.exists(f"{path}/{name}-{suffix}{extension}"):
         suffix += 1
-    return f"{name}-{suffix}{extension}"
+    return f"{name}-{suffix}"
 
 
 def write_file_windows(window_list, chrome_path, files_directory, filename):
@@ -101,8 +101,11 @@ def write_file_windows(window_list, chrome_path, files_directory, filename):
     @ECHO OFF suppresses any output from the file.
     Then, this command is constructed for each window (one line each):
 
-    start [path/to/chrome.exe] --new-window [--incognito]
+    start "" "[path/to/chrome.exe]" --new-window [--incognito]
         --user-data-dir="[user_data_dir]" [urls]
+
+    `start ""` is essential. It is also essential that the --args go
+    before the urls.
 
     If --user-data-dir gets a non-empty string, it will load whatever
     chrome profile is found at that absolute path. If it is blank, it
@@ -119,20 +122,19 @@ def write_file_windows(window_list, chrome_path, files_directory, filename):
             file goes.
         filename (str): Name of the file.
     """
-    path = f"{files_directory}/{filename}"
+    path = f"{files_directory}/{filename}.bat"
     with open(path, "w", encoding="UTF-8") as file:
         file.write("@ECHO OFF\n")
 
         for window in window_list:
-            file.write(f"start \"{chrome_path}\" --new-window")
+            file.write(f"start \"\" \"{chrome_path}\"")
+            user_data_dir = common.load_pickle("user_data_dir.txt")
+            file.write(f" --new-window --user-data-dir=\"{user_data_dir}\"")
             if window.mode == "incognito":
                 file.write(" --incognito")
-            user_data_dir = common.load_pickle("user_data_dir.txt")
-            file.write(f" --user-data-dir=\"{user_data_dir}\"")
             for url in window.urls:
                 file.write(f" \"{url}\"")
             file.write("\n")
-
         file.write("EXIT")
 
 

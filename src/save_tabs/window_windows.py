@@ -52,6 +52,9 @@ Args:
 def get_window_list():
     """Return a list of Window objects.
 
+    If user doesn't accept the disclaimer in get_chrome_pycwnd(), exit
+    the program.
+
     If window_list is None, the program will exit after the return
     call (see main.py).
     
@@ -60,6 +63,8 @@ def get_window_list():
             Returns None if user quits in get_program_pycwnd().
     """
     program_pycwnd = get_program_pycwnd()
+    if program_pycwnd is None:
+        return None
 
     window_list = []
     keep_going = True
@@ -67,6 +72,8 @@ def get_window_list():
         chrome_pycwnd = get_chrome_pycwnd()
 
         window_mode = get_window_mode(program_pycwnd)
+
+        common.focus_window(chrome_pycwnd)
         window_urls = get_window_urls(chrome_pycwnd)
         if window_urls is not None:
             window_list += [Window(window_mode, window_urls)]
@@ -110,12 +117,14 @@ def get_program_pycwnd():
                     "If you have rebinded any of these shortcuts or don't accept these terms, "
                     "you've been warned!\n\n"
 
-                    "To proceed, enter \"y\": ").lower()
+                    "To proceed, enter \"y\": ").lower().strip()
     if accept == "y":
         program_window = win32ui.GetForegroundWindow()
+        common.clear()
+        return program_window
 
     common.clear()
-    return program_window
+    return None
 
 
 def get_chrome_pycwnd():
@@ -173,7 +182,7 @@ def get_window_mode(program_pycwnd):
     common.clear()
     common.focus_window(program_pycwnd)
     is_window_incognito = input(f"{header}\n\nIs this window incognito? If so, enter \"y\" "
-                                "(otherwise press enter): ").lower()
+                                "(otherwise press enter): ").lower().strip()
 
     if is_window_incognito == "y":
         return "incognito"
@@ -239,6 +248,7 @@ def ensure_chrome_in_front(target_window, func):
     header = common.box("Save tabs | Getting tab urls")
     first_try = True
     foreground_window = win32ui.GetForegroundWindow()
+
     while foreground_window != target_window:
         if first_try:
             common.clear()
@@ -250,10 +260,11 @@ def ensure_chrome_in_front(target_window, func):
             input("\nChrome still not detected. Try again, then click here and press enter: ")
         test_click()
         foreground_window = win32ui.GetForegroundWindow()
+        if foreground_window == target_window:
+            common.clear()
+            print(f"{header}\n\nWorking... (don't click anywhere!)")
 
     func()
-    common.clear()
-    print(f"{header}\n\nWorking... (don't click anywhere!)")
 
 
 def open_first_tab():
@@ -299,7 +310,7 @@ def ask_if_continue(program_pycwnd):
     common.focus_window(program_pycwnd)
     keep_going = input("Save another window's tabs?\n\n"
                        "If yes, snap that window to the left side of the screen, then enter "
-                       "\"y\". Otherwise, press enter: ").lower()
+                       "\"y\". Otherwise, press enter: ").lower().strip()
 
     if keep_going == "y":
         return True
