@@ -9,10 +9,6 @@
 on run argv
 	if application id "com.google.Chrome" is running then tell application id "com.google.Chrome"
 		set windowIndex to (item 1 of argv) as number
-		if mode of window windowIndex = "normal" then
-			return "normal"
-		else
-			return "incognito"
-		end if
+		return mode of window windowIndex
 	end tell
 end run

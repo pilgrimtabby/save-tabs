@@ -185,7 +185,7 @@ def print_urls(urls):
     """Print up to four labelled, abbreviated urls from a window.
     
     Args:
-        urls: window.urls from a Window object.
+        urls (list): window.urls from a Window object.
     """
     if len(urls) > 5:
         urls_to_print = urls[:4]

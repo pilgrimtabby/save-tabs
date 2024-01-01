@@ -29,7 +29,7 @@ def main():
         print(f"{header}\n")
         for i, option in enumerate(menu_options):
             if option == "Go back":
-                print("")
+                print()
             print(f"{str(i + 1)}: {option}")
 
         user_input = input(f"\nChoose an option (1 - {len(menu_options)}): ")
@@ -87,12 +87,13 @@ def change_fullscreen_settings():
     """Choose whether windows open in fullscreen mode (macOS only)."""
     header = common.box("Save tabs | Settings | Fullscreen settings")
     done = False
-    current_setting = common.load_pickle("fullscreen.txt")
-    if current_setting == "":
-        current_setting = "off"
-        common.dump_pickle(current_setting, "fullscreen.txt")
 
     while not done:
+        current_setting = common.load_pickle("fullscreen.txt")
+        if current_setting == "":
+            current_setting = "off"
+            common.dump_pickle(current_setting, "fullscreen.txt")
+
         common.clear()
         user_input = input(f"{header}\n\nAutomatic fullscreen is: {current_setting.upper()}\n\n"
 
@@ -108,10 +109,9 @@ def change_fullscreen_settings():
 
         if user_input == "y":
             if current_setting == "off":
-                current_setting = "on"
+                common.dump_pickle("on", "overwrite.txt")
             else:
-                current_setting = "off"
-            common.dump_pickle(current_setting, "fullscreen.txt")
+                common.dump_pickle("off", "overwrite.txt")
 
         else:
             done = True
@@ -123,12 +123,13 @@ def change_file_overwriting_settings():
     previous file, so this is off by default."""
     header = common.box("Save tabs | Settings | File overwrite settings")
     done = False
-    current_setting = common.load_pickle("overwrite.txt")
-    if current_setting == "":
-        current_setting = "off"
-        common.dump_pickle(current_setting, "overwrite.txt")
 
     while not done:
+        current_setting = common.load_pickle("overwrite.txt")
+        if current_setting == "":
+            current_setting = "off"
+            common.dump_pickle(current_setting, "overwrite.txt")
+
         common.clear()
         user_input = input(f"{header}\n\nFile overwriting is: {current_setting.upper()}\n\n"
 
@@ -143,10 +144,9 @@ def change_file_overwriting_settings():
 
         if user_input == "y":
             if current_setting == "off":
-                current_setting = "on"
+                common.dump_pickle("on", "overwrite.txt")
             else:
-                current_setting = "off"
-            common.dump_pickle(current_setting, "overwrite.txt")
+                common.dump_pickle("off", "overwrite.txt")
 
         else:
             done = True
