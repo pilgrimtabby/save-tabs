@@ -43,9 +43,15 @@ def main(window_list):
         settings.main()
         files_directory = common.load_pickle("directory.txt")
         filename = get_filename()
+
     file_overwriting = common.load_pickle("overwrite.txt")
     if file_overwriting == "off":
-        filename = get_unique_name(files_directory, filename)
+        if platform.system() == "Windows":
+            extension = ".bat"
+        else:
+            extension = ""
+        if os.path.exists(f"{files_directory}/{filename}{extension}"):
+            filename = get_unique_name(files_directory, filename, extension)
 
     chrome_path = browser_path.get_chrome_path()
     if chrome_path is None:
@@ -73,7 +79,7 @@ def get_filename():
     return filename
 
 
-def get_unique_name(path, name):
+def get_unique_name(path, name, extension):
     """Return a unique name for a file.
     
     Args:
@@ -83,10 +89,6 @@ def get_unique_name(path, name):
     Returns:
         str: The unique new name of the file (not a full path).
     """
-    if platform.system() == "Windows":
-        extension = ".bat"
-    else:
-        extension = ""
     suffix = 2
     while os.path.exists(f"{path}/{name}-{suffix}{extension}"):
         suffix += 1
@@ -147,7 +149,7 @@ def write_file_macos(window_list, chrome_path, files_directory, filename):
     For each window, the following is written (one line per window):
 
     open -na [/path/to/Google Chrome] --args [--incognito] --new-window
-        --user-data-dir="[user-data-dir] [urls]
+        --user-data-dir="[user-data-dir] "[url]" "[url]"
 
     If --user-data-dir is a non-empty string, the script will start
     Chrome with whatever profile is found at that absolute path. If it

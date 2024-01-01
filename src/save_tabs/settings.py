@@ -109,9 +109,9 @@ def change_fullscreen_settings():
 
         if user_input == "y":
             if current_setting == "off":
-                common.dump_pickle("on", "overwrite.txt")
+                common.dump_pickle("on", "fullscreen.txt")
             else:
-                common.dump_pickle("off", "overwrite.txt")
+                common.dump_pickle("off", "fullscreen.txt")
 
         else:
             done = True
