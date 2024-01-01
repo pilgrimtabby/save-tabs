@@ -75,7 +75,7 @@ def get_filename():
     """
     header = common.box("Save tabs | Filename")
     common.clear()
-    filename = input(f"{header}\n\nPlease enter a filename (press enter for settings): ")
+    filename = input(f"{header}\n\nPlease enter a filename (press enter for settings): ").strip()
     return filename
 
 
