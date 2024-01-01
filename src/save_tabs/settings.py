@@ -69,7 +69,7 @@ def change_directory_settings():
         if user_input != "y":
             return
 
-    print("\nPlease select a location for files:")
+    print("\nPlease select a location to save files:")
     new_target_directory = common.get_file_path(file_type="dir")
     if new_target_directory == "" and not os.path.exists(current_target_directory):
         new_target_directory = os.path.join(os.path.expanduser('~'), 'Desktop')
