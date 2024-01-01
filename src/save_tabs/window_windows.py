@@ -36,6 +36,7 @@ if platform.system() == "Windows":
     import win32ui
 
 import common
+import settings
 
 
 Window = collections.namedtuple("Window", "mode urls")
@@ -90,41 +91,48 @@ def get_program_pycwnd():
     which means win32ui.GetForegroundWindow() should always return a
     object pointing to the program window.
 
+    If the user types "s", bring up the settings menu.
+
     Returns:
         program_window (PyCWnd object | None): The program window.
             Return None if the user doesn't accept the disclaimer.
     """
     header = common.box("Save tabs | Disclaimer")
     program_window = None
+    keep_going = True
 
-    common.clear()
-    accept = input(f"{header}\n\nPlease make sure the Chrome window you want to save is open and "
-                    "snapped to the left side of the screen!\n\n"
-
-                    "Please note this program refreshes your tabs, so make sure to save your "
-                    "work.\n"
-                    "This program simulates a click at (1, 0) (top left corner) to bring Google "
-                    "Chrome into focus.\n"
-                    "It also uses keyboard scripting to gather urls.\n"
-                    "These are the keyboard shortcuts used:\n\n"
-
-                    "ctrl+1 (to navigate to the first tab)\n"
-                    "ctrl+l (to select the url of each tab)\n"
-                    "ctrl+c (to copy the url of each tab)\n"
-                    "ctrl+r (to refresh tabs)\n"
-                    "ctrl+tab (to switch between tabs)\n\n"
-
-                    "If you have rebinded any of these shortcuts or don't accept these terms, "
-                    "you've been warned!\n\n"
-
-                    "To proceed, enter \"y\": ").lower().strip()
-    if accept == "y":
-        program_window = win32ui.GetForegroundWindow()
+    while keep_going:
         common.clear()
-        return program_window
+        accept = input(f"{header}\n\nPlease make sure the Chrome window you want to save is open "
+                        "and snapped to the left side of the screen!\n\n"
 
-    common.clear()
-    return None
+                        "Please note this program refreshes your tabs, so make sure to save your "
+                        "work.\n"
+                        "This program simulates a click at (1, 0) (top left corner) to bring "
+                        "Google Chrome into focus.\n"
+                        "It also uses keyboard scripting to gather urls.\n"
+                        "These are the keyboard shortcuts used:\n\n"
+
+                        "ctrl+1 (to navigate to the first tab)\n"
+                        "ctrl+l (to select the url of each tab)\n"
+                        "ctrl+c (to copy the url of each tab)\n"
+                        "ctrl+r (to refresh tabs)\n"
+                        "ctrl+tab (to switch between tabs)\n\n"
+
+                        "If you have rebinded any of these shortcuts or don't accept these terms, "
+                        "you've been warned!\n\n"
+
+                        "To proceed, enter \"y\" (enter \"s\" for settings): ").lower().strip()
+        if accept == "y":
+            program_window = win32ui.GetForegroundWindow()
+            common.clear()
+            return program_window
+        if accept == "s":
+            settings.main()
+        else:
+            keep_going = False
+            common.clear()
+            return None
 
 
 def get_chrome_pycwnd():

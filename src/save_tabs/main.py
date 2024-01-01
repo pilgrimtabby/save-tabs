@@ -38,7 +38,7 @@ def exit_screen():
         chime.theme("mario")
         chime.info()
     common.clear()
-    print("\n\n\n               Come again soon!\n\n\n"
+    print("\n\n\n           File successfully generated!\n\n\n"
         "               ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇\n"
         "               ⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⠿⠿⢿⡿⢿⣿⣿⣿⠃\n"
         "               ⣿⣿⣿⣿⣿⣿⣥⣄⣀⣀⠀⠀⠀⠀⠀⢰⣾⣿⣿⠏\n"

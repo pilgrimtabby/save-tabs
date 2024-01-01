@@ -19,13 +19,15 @@ import os
 import subprocess
 import time
 import common
+import settings
 from window_windows import Window
 
 
 def get_window_list():
     """Return a list of Window objects.
 
-    If get_window_count() returns 0, return None.
+    If get_window_count() returns 0, return None (after the user 
+    optionally accesses the settings menu).
     The program will exit after the return call (see main.py).
 
     Else if get_window_count() returns 1, skip choose_windows(). Just
@@ -38,11 +40,18 @@ def get_window_list():
             windows are open.
     """
     window_count = get_window_count()
+
     if window_count == 0:
         header = common.box("Save tabs | No windows open")
-        common.clear()
-        input(f"{header}\n\nNo Chrome windows found!\n"
-              "Press any key to exit: ")
+        keep_going = True
+        while keep_going:
+            common.clear()
+            user_choice = input(f"{header}\n\nNo Chrome windows found!\n"
+                                "Press \"s\" for settings, or enter to exit: ").lower().strip()
+            if user_choice == "s":
+                settings.main()
+            else:
+                keep_going = False
         common.clear()
         return None
 
