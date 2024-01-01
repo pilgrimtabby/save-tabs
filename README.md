@@ -14,7 +14,7 @@ After accepting the terms of use, you'll be prompted to snap your Chrome window 
 
 ### macOS
 
-If you have more than one window open, you'll be prompted to choose which window(s) to save. Follow the on-screen instructions. This program generates a bash executable file with your Chrome session information--to use it, double click it.
+If you have more than one window open, you'll be prompted to choose which window(s) to save. Follow the on-screen instructions. This program generates a zsh executable file with your Chrome session information--to use it, double click it.
 
 # Installation
 
